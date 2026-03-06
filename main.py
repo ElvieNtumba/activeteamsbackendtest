@@ -25,6 +25,8 @@ from passlib.context import CryptContext
 import json
 from urllib.parse import unquote
 import traceback
+import os
+import uvicorn
 import asyncio
 from apscheduler.schedulers.background import BackgroundScheduler, BlockingScheduler
 from pydantic import BaseModel
@@ -11541,4 +11543,13 @@ async def cleanup_orphaned_tasks(
         raise HTTPException(status_code=500, detail=f"Cleanup error: {str(e)}")     
         
         
-        
+if __name__ == "__main__":
+# Render provides PORT; fallback to 8000 for local dev
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(
+        "main:app",          # change if your file/module name is different
+        host="0.0.0.0",
+        port=port,
+        log_level="info",    # optional: quieter in production
+        # reload=True        # only enable locally if you want auto-reload
+    )  
